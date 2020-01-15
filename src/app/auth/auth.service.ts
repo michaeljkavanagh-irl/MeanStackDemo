@@ -32,11 +32,12 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     const authData: AuthData = {email: email, password: password};
-    return this.http.
-    post("http://localhost:3000/api/user/signup", authData)
-    .subscribe(() => {
+     this.http.
+    post('http://localhost:3000/api/user/signup', authData)
+    .subscribe((response) => {
       // tslint:disable-next-line: no-unused-expression
-      this.router.navigate['/'];
+      console.log(response)
+      this.router.navigate(['/login']);
     }, error => {
       this.authStatusListener.next(false);
     });
@@ -44,7 +45,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     const authData: AuthData = {email: email, password: password};
-    this.http.post<{token: string, expiresIn: number, userId: string}>("http://localhost:3000/api/user/login", authData)
+    this.http.post<{token: string, expiresIn: number, userId: string}>('http://localhost:3000/api/user/login', authData)
     .subscribe(response => {
      const token = response.token;
      this.token = token;
@@ -58,7 +59,7 @@ export class AuthService {
       const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
       console.log(expirationDate);
       this.saveAuthData(token, expirationDate, this.userId);
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
      }
     },  error => {
       this.authStatusListener.next(false);
